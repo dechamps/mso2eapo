@@ -84,6 +84,33 @@ function parse_gain_block {
     echo
 }
 
+function parse_pf {
+    hz=''
+    while read -r line
+    do
+        if [[ "$line" = '' ]]; then break; fi
+        echo "# $line"
+
+        if [[ -z "$hz" ]]
+        then
+            hz="${line#'Parameter "Cutoff freq (Hz)" = '}"
+            if [[ "$hz" = "$line" ]]; then hz=''; fi
+        fi
+    done
+
+    # Try to work around Equalizer APO bug https://sourceforge.net/p/equalizerapo/tickets/141/
+    if [[ "${hz%.*}" != "$hz" ]]; then hz+='000'; fi
+
+    echo "Filter: ON $1 Fc $hz Hz"
+    echo
+}
+function parse_hpf {
+    parse_pf "HP"
+}
+function parse_lpf {
+    parse_pf "LP"
+}
+
 while read -r line
 do
     if [[ "$line" = '' ]]; then continue; fi
@@ -94,6 +121,8 @@ do
         'Parametric EQ (RBJ)') parser_type='parametric_eq';;
         'Delay Block') parser_type='delay_block';;
         'Gain Block') parser_type='gain_block';;
+        'HPF Butterworth 12 dB/oct') parser_type='hpf';;
+        'LPF Butterworth 12 dB/oct') parser_type='lpf';;
         *)
             echo "Filter type '$type' unsupported, skipping" >&2
             while read -r line
