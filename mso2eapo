@@ -62,6 +62,12 @@ function parse_delay_block {
         fi
     done
 
+    if [[ "${msec:0:1}" = '-' ]]
+    then
+        echo "Delay blocks with negative delay ($msec msec) are unsupported, skipping" >&2
+        return
+    fi
+
     echo "Delay: $msec ms"
     echo
 }

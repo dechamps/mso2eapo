@@ -11,6 +11,7 @@ to copy the filter parameters by hand, which is tedious and error-prone.
 - Only supports *Gain Block*, *Delay Block*, *Parametric EQ*,
   *Parametric EQ (RBJ)*, *HPF Butterworth 12 dB/oct*, and
   *LPF Butterworth 12 dB/oct* filter types, for now.
+- *Delay Blocks* with negative delays are not supported.
 - Because the MSO filter report does not include information about topology
   (i.e. filter channels), all filters are dumped into a single file/chain. Any
   splitting has to be done by hand.
